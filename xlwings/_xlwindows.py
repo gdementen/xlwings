@@ -70,7 +70,10 @@ def get_xl_app_from_hwnd(hwnd):
     ptr = accessible_object_from_window(child_hwnd)
     p = comtypes_to_pywin(ptr, interface=IDispatch)
     disp = Dispatch(p)
-    return disp.Application
+    try:
+        return disp.Application
+    except AttributeError:
+        return None
 
 
 def get_excel_hwnds():
@@ -94,7 +97,8 @@ def get_xl_apps():
     for hwnd in hwnds:
         try:
             xl_app = get_xl_app_from_hwnd(hwnd)
-            xl_apps.append(xl_app)
+            if xl_app is not None:
+                xl_apps.append(xl_app)
         except WindowsError:
             # This happens if the bare Excel Application is open without Workbook
             # i.e. there is no 'EXCEL7' child hwnd that would be necessary to make a connection
