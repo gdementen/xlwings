@@ -171,6 +171,8 @@ class Workbook(object):
         elif fullname:
             self.fullname = fullname
             if not os.path.isfile(fullname) or xlplatform.is_file_open(self.fullname):
+                # FIXME: invalid path go through this path, leading to bad error
+                # message
                 # Connect to unsaved Workbook (e.g. 'Workbook1') or to an opened Workbook
                 self.xl_app, self.xl_workbook = xlplatform.get_open_workbook(self.fullname, app_target)
             else:
@@ -723,6 +725,7 @@ class Range(object):
         if self.workbook is None and xlplatform.get_xl_workbook_current() is None:
             raise NameError('You must first instantiate a Workbook object.')
         elif self.workbook is None:
+            # XXX: should self.workbook be initialized in this case?
             self.xl_workbook = xlplatform.get_xl_workbook_current()
         else:
             self.xl_workbook = self.workbook.xl_workbook

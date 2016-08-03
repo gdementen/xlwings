@@ -408,10 +408,13 @@ def _datetime_to_com_time(dt_time):
 def prepare_xl_data_element(x):
     if isinstance(x, time_types):
         return _datetime_to_com_time(x)
+    # FIXME: flexible types should be translated to strings, not float
     elif np and isinstance(x, np.generic):
         return float(x)
     elif x is None:
         return ""
+    # XXX: use x != x instead? so that you can handle nan without numpy
+    # installed
     elif np and isinstance(x, float) and np.isnan(x):
         return ""
     else:

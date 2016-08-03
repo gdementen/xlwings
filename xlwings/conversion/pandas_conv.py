@@ -64,6 +64,7 @@ if pd:
             if index:
                 if value.index.name in value.columns:
                     # Prevents column name collision when resetting the index
+                    # XXX: inplace seems like a bad idea!
                     value.index.rename(None, inplace=True)
                 value = value.reset_index()
 
